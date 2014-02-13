@@ -4,5 +4,13 @@
     <string name="app_name">Kindersicherung</string>
     <string name="action_settings">Settings</string>
     <string name="hello_world">Hello world!</string>
+    <string name="simon">Simon:</string>
+    <string name="simonButton"></string>
+    <string name="saschaButton"></string>
+    <string name="leaButton"></string>
+    <string name="sascha">Sascha:</string>
+    <string name="lea">Lea:</string>
+    <string name="all">Alle:</string>
+    <string name="alleButton"></string>
 
 </resources>

@@ -1,16 +1,87 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/RelativeLayout1"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".MainActivity" >
 
-    <TextView
+    <ToggleButton
+        android:id="@+id/simonButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/hello_world" />
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="24dp"
+        android:text="@string/simonButton" />
+
+    <ToggleButton
+        android:id="@+id/saschaButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/simonButton"
+        android:layout_below="@+id/simonButton"
+        android:text="@string/saschaButton" />
+
+    <ToggleButton
+        android:id="@+id/leaButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/saschaButton"
+        android:layout_below="@+id/saschaButton"
+        android:text="@string/leaButton" />
+
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/simonButton"
+        android:layout_alignBottom="@+id/simonButton"
+        android:layout_marginRight="28dp"
+        android:layout_toLeftOf="@+id/simonButton"
+        android:gravity="right"
+        android:text="@string/simon" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/saschaButton"
+        android:layout_alignBottom="@+id/saschaButton"
+        android:layout_alignRight="@+id/textView1"
+        android:gravity="right"
+        android:text="@string/sascha" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/leaButton"
+        android:layout_alignBottom="@+id/leaButton"
+        android:layout_alignRight="@+id/textView2"
+        android:gravity="right"
+        android:text="@string/lea" />
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignRight="@+id/textView3"
+        android:layout_below="@+id/leaButton"
+        android:layout_marginTop="51dp"
+        android:text="@string/all" />
+
+    <ToggleButton
+        android:id="@+id/allButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/textView4"
+        android:layout_alignBottom="@+id/textView4"
+        android:layout_alignLeft="@+id/leaButton"
+        android:text="@string/alleButton" />
 
 </RelativeLayout>
