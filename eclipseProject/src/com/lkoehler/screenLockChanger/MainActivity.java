@@ -1,6 +1,8 @@
 package com.lkoehler.screenLockChanger;
 
 import android.app.Activity;
+import android.appwidget.AppWidgetManager;
+import android.content.ComponentName;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
@@ -8,11 +10,8 @@ import android.view.View.OnClickListener;
 import android.widget.ToggleButton;
 
 import com.lkoehler.screenLockController.Controller;
-import com.lkoehler.sqlite.DAOStatus;
-import com.lkoehler.sqlite.Status;
 
 public class MainActivity extends Activity {
-	private DAOStatus daoStatus;
 
 	private Controller controller;
 
@@ -21,24 +20,17 @@ public class MainActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
-		daoStatus = new DAOStatus(this);
-		controller = new Controller();
+		controller = new Controller(this);
 
-		daoStatus.open();
-		String[] names = { "simon", "sascha", "lea" };
-		daoStatus.init(names);
-
-		Status status;
-		ToggleButton tButton;
 		ToggleButton allButton = (ToggleButton) findViewById(R.id.allButton);
 		allButton.setOnClickListener(listener);
 
+		ToggleButton tButton;
 		tButton = (ToggleButton) findViewById(R.id.simonButton);
 		tButton.setOnClickListener(listener);
-		status = daoStatus.getByName("simon");
 		boolean setAllButton = true;
 
-		if (status.getStatus() == 1) {
+		if (controller.getStatus("simon")) {
 			tButton.setChecked(true);
 		} else {
 			setAllButton = false;
@@ -46,8 +38,7 @@ public class MainActivity extends Activity {
 
 		tButton = (ToggleButton) findViewById(R.id.saschaButton);
 		tButton.setOnClickListener(listener);
-		status = daoStatus.getByName("sascha");
-		if (status.getStatus() == 1) {
+		if (controller.getStatus("sascha")) {
 			tButton.setChecked(true);
 		} else {
 			setAllButton = false;
@@ -55,8 +46,7 @@ public class MainActivity extends Activity {
 
 		tButton = (ToggleButton) findViewById(R.id.leaButton);
 		tButton.setOnClickListener(listener);
-		status = daoStatus.getByName("lea");
-		if (status.getStatus() == 1) {
+		if (controller.getStatus("lea")) {
 			tButton.setChecked(true);
 		} else {
 			setAllButton = false;
@@ -66,7 +56,7 @@ public class MainActivity extends Activity {
 			allButton.setChecked(true);
 	}
 
-	public void updateAllChecked() {
+	public void updateAllButton() {
 		ToggleButton tButton;
 		boolean setAllButton = true;
 		ToggleButton allButton = (ToggleButton) findViewById(R.id.allButton);
@@ -89,6 +79,18 @@ public class MainActivity extends Activity {
 			allButton.setChecked(false);
 	}
 
+	public void setAllButtons(boolean state) {
+		ToggleButton tButton;
+		tButton = (ToggleButton) findViewById(R.id.simonButton);
+		tButton.setChecked(state);
+
+		tButton = (ToggleButton) findViewById(R.id.saschaButton);
+		tButton.setChecked(state);
+
+		tButton = (ToggleButton) findViewById(R.id.leaButton);
+		tButton.setChecked(state);
+	}
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.main, menu);
@@ -99,66 +101,28 @@ public class MainActivity extends Activity {
 
 		@Override
 		public void onClick(View v) {
-			Status status = null;
-
-			if (v.getId() == R.id.simonButton) {
-				status = daoStatus.getByName("simon");
-				updateAllChecked();
-
-			} else if (v.getId() == R.id.saschaButton) {
-				status = daoStatus.getByName("sascha");
-				updateAllChecked();
-
-			} else if (v.getId() == R.id.leaButton) {
-				status = daoStatus.getByName("lea");
-				updateAllChecked();
-
-			} else if (v.getId() == R.id.allButton) {
-				ToggleButton tButton = (ToggleButton) findViewById(v.getId());
-				boolean bState = false;
-				int state = 0;
-				if (tButton.isChecked()) {
-					state = 1;
-					bState = true;
-				}
-
-				tButton = (ToggleButton) findViewById(R.id.simonButton);
-				status = daoStatus.getByName("simon");
-				status.setStatus(state);
-				daoStatus.updateStatus(status);
-				tButton.setChecked(bState);
-
-				tButton = (ToggleButton) findViewById(R.id.saschaButton);
-				status = daoStatus.getByName("sascha");
-				status.setStatus(state);
-				daoStatus.updateStatus(status);
-				tButton.setChecked(bState);
-
-				tButton = (ToggleButton) findViewById(R.id.leaButton);
-				status = daoStatus.getByName("lea");
-				status.setStatus(state);
-				daoStatus.updateStatus(status);
-				tButton.setChecked(bState);
-
-				if (bState) {
-					controller.activateAll();
-				} else {
-					controller.deactivateAll();
-				}
-
-				return;
-			}
-
 			ToggleButton tButton = (ToggleButton) findViewById(v.getId());
-			if (tButton.isChecked()) {
-				status.setStatus(1);
-				controller.activateScreenLock(status.getName());
+			if (tButton.getId() == R.id.allButton) {
+				controller.updateAll(tButton.isChecked());
+				setAllButtons(tButton.isChecked());
 			} else {
-				status.setStatus(0);
-				controller.deactivateScreenLock(status.getName());
+				String name = "";
+				if (tButton.getId() == R.id.simonButton) {
+					name = "simon";
+				} else if (tButton.getId() == R.id.saschaButton) {
+					name = "sascha";
+				} else if (tButton.getId() == R.id.leaButton) {
+					name = "lea";
+				}
+				controller.updateScreenLock(name, tButton.isChecked());
+				updateAllButton();
 			}
 
-			daoStatus.updateStatus(status);
+			AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(getApplicationContext());
+		    int[] appWidgetIds = appWidgetManager.getAppWidgetIds(new ComponentName(v.getContext(), WidgetProvider.class));
+		    if (appWidgetIds.length > 0) {
+		        new WidgetProvider().onUpdate(v.getContext(), appWidgetManager, appWidgetIds);
+		    }
 		}
 	};
 }

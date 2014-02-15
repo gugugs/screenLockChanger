@@ -47,7 +47,7 @@
         android:text="@string/simon" />
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/allLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBaseline="@+id/saschaButton"
@@ -62,12 +62,12 @@
         android:layout_height="wrap_content"
         android:layout_alignBaseline="@+id/leaButton"
         android:layout_alignBottom="@+id/leaButton"
-        android:layout_alignRight="@+id/textView2"
+        android:layout_alignRight="@+id/allLabel"
         android:gravity="right"
         android:text="@string/lea" />
 
     <TextView
-        android:id="@+id/textView4"
+        android:id="@+id/allTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignRight="@+id/textView3"
@@ -79,8 +79,8 @@
         android:id="@+id/allButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/textView4"
-        android:layout_alignBottom="@+id/textView4"
+        android:layout_alignBaseline="@+id/allTextView"
+        android:layout_alignBottom="@+id/allTextView"
         android:layout_alignLeft="@+id/leaButton"
         android:text="@string/alleButton" />
 
