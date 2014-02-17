@@ -18,12 +18,13 @@ public class WidgetProvider extends AppWidgetProvider {
 	public static String SASCHA = "sascha";
 	public static String LEA = "lea";
 	public static String ALL = "all";
-	
+
 	@Override
 	public void onUpdate(Context context, AppWidgetManager appWidgetManager,
 			int[] appWidgetIds) {
 
 		controller = new Controller(context);
+		controller.setExecute(false);
 
 		RemoteViews remoteViews = new RemoteViews(context.getPackageName(),
 				R.layout.widget);
@@ -48,8 +49,8 @@ public class WidgetProvider extends AppWidgetProvider {
 		if (!status)
 			setAllButton = false;
 
-		remoteViews.setTextViewText(R.id.allLabel,
-				setAllButton == true ? "AN" : "AUS");
+		remoteViews.setTextViewText(R.id.allLabel, setAllButton == true ? "AN"
+				: "AUS");
 
 		PendingIntent pintent;
 		Intent intent;
@@ -68,7 +69,7 @@ public class WidgetProvider extends AppWidgetProvider {
 		intent.setAction(LEA);
 		pintent = PendingIntent.getBroadcast(context, 0, intent, 0);
 		remoteViews.setOnClickPendingIntent(R.id.leaLabel, pintent);
-		
+
 		intent = new Intent(context, WidgetProvider.class);
 		intent.setAction(ALL);
 		pintent = PendingIntent.getBroadcast(context, 0, intent, 0);
@@ -82,7 +83,7 @@ public class WidgetProvider extends AppWidgetProvider {
 		super.onReceive(context, intent);
 
 		controller = new Controller(context);
-		
+
 		if (intent.getAction().equals(SIMON)) {
 			controller.toggle("simon");
 		} else if (intent.getAction().equals(SASCHA)) {
@@ -92,11 +93,15 @@ public class WidgetProvider extends AppWidgetProvider {
 		} else if (intent.getAction().equals(ALL)) {
 			controller.toggleAll();
 		}
-		
-		AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
-	    int[] appWidgetIds = appWidgetManager.getAppWidgetIds(new ComponentName(context, WidgetProvider.class));
-	    if (appWidgetIds.length > 0) {
-	        new WidgetProvider().onUpdate(context, appWidgetManager, appWidgetIds);
-	    }
+
+		AppWidgetManager appWidgetManager = AppWidgetManager
+				.getInstance(context);
+		int[] appWidgetIds = appWidgetManager
+				.getAppWidgetIds(new ComponentName(context,
+						WidgetProvider.class));
+		if (appWidgetIds.length > 0) {
+			new WidgetProvider().onUpdate(context, appWidgetManager,
+					appWidgetIds);
+		}
 	}
 }

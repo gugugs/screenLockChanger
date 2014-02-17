@@ -1,60 +1,40 @@
-/**
- * @(#) Status.java
- */
-
 package com.lkoehler.sqlite;
 
-public class Status
-{
-	
+public class Status {
 
 	private long id;
-	
-	
+
 	private String name;
-	
-	
+
 	private int status;
-	
-	
-	public Status( long id, String name, int status ) {
+
+	public Status(long id, String name, int status) {
 		this.id = id;
 		this.name = name;
 		this.status = status;
 	}
-	
-	public void setId( long id )
-	{
-		this.id=id;
+
+	public void setId(long id) {
+		this.id = id;
 	}
-	
-	
-	public long getId( )
-	{
+
+	public long getId() {
 		return id;
 	}
-	
-	
-	public void setName( String name )
-	{
-		this.name=name;
+
+	public void setName(String name) {
+		this.name = name;
 	}
-	
-	
-	public String getName( )
-	{
+
+	public String getName() {
 		return name;
 	}
-	
-	
-	public void setStatus( int status )
-	{
-		this.status=status;
+
+	public void setStatus(int status) {
+		this.status = status;
 	}
-	
-	
-	public int getStatus( )
-	{
+
+	public int getStatus() {
 		return status;
 	}
 }

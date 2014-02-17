@@ -21,6 +21,7 @@ public class MainActivity extends Activity {
 		setContentView(R.layout.activity_main);
 
 		controller = new Controller(this);
+		controller.setExecute(false);
 
 		ToggleButton allButton = (ToggleButton) findViewById(R.id.allButton);
 		allButton.setOnClickListener(listener);
@@ -118,11 +119,15 @@ public class MainActivity extends Activity {
 				updateAllButton();
 			}
 
-			AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(getApplicationContext());
-		    int[] appWidgetIds = appWidgetManager.getAppWidgetIds(new ComponentName(v.getContext(), WidgetProvider.class));
-		    if (appWidgetIds.length > 0) {
-		        new WidgetProvider().onUpdate(v.getContext(), appWidgetManager, appWidgetIds);
-		    }
+			AppWidgetManager appWidgetManager = AppWidgetManager
+					.getInstance(getApplicationContext());
+			int[] appWidgetIds = appWidgetManager
+					.getAppWidgetIds(new ComponentName(v.getContext(),
+							WidgetProvider.class));
+			if (appWidgetIds.length > 0) {
+				new WidgetProvider().onUpdate(v.getContext(), appWidgetManager,
+						appWidgetIds);
+			}
 		}
 	};
 }

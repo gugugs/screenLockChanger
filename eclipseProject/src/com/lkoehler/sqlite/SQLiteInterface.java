@@ -1,7 +1,3 @@
-/**
- * @(#) SQLiteInterface.java
- */
-
 package com.lkoehler.sqlite;
 
 import android.content.ContentValues;

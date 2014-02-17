@@ -1,7 +1,3 @@
-/**
- * @(#) Controller.java
- */
-
 package com.lkoehler.screenLockController;
 
 import java.io.DataOutputStream;
