@@ -15,44 +15,61 @@ import com.lkoehler.sqlite.Status;
 
 public class Controller {
 
-	public DAOStatus daoStatus;
+	private boolean execute = false;
+
+	private static final String SIMON_PATH = "/data/system/users/10/";
+	private static final String SASCHA_PATH = "/data/system/users/10/";
+	private static final String LEA_PATH = "/data/system/users/10/";
+
+	private DAOStatus daoStatus;
 
 	public Controller(Context context) {
 		daoStatus = new DAOStatus(context);
 	}
 
-	public void lockOn(String name) {
-		try {
-			Process process = Runtime.getRuntime().exec("su");
-			DataOutputStream os = new DataOutputStream(
-					process.getOutputStream());
-			os.writeBytes("mv /data/system/password.key.old /data/system/password.key\n");
-		} catch (IOException e) {
-			e.printStackTrace();
+	public String fromNameToPath(String name) {
+		if (name.equals("simon")) {
+			return SIMON_PATH;
+		} else if (name.equals("sascha")) {
+			return SASCHA_PATH;
+		} else if (name.equals("lea")) {
+			return LEA_PATH;
+		} else {
+			return null;
 		}
 	}
 
-	public void lockOff(String name) {
-		try {
-			Process process = Runtime.getRuntime().exec("su");
-			DataOutputStream os = new DataOutputStream(
-					process.getOutputStream());
-			os.writeBytes("mv /data/system/password.key /data/system/password.key.old\n");
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+	public void setExecute(boolean state) {
+		execute = state;
 	}
 
 	public void updateScreenLock(String name, boolean state) {
-
 		daoStatus.open();
 		Status status = daoStatus.getByName(name);
 		status.setStatus(state == true ? 1 : 0);
 		daoStatus.updateStatus(status);
 		daoStatus.close();
 
-		Log.w(Controller.class.getName(), "ScreenLock fuer " + name
-				+ " wurde auf " + state + " gesetzt.");
+		String path = fromNameToPath(name);
+		String command;
+		if (state) {
+			command = "mv " + path + "password.key.old " + path
+					+ "password.key\n";
+		} else {
+			command = "mv " + path + "password.key " + path
+					+ "password.key.old\n";
+		}
+		if (execute) {
+			try {
+				Process process = Runtime.getRuntime().exec("su");
+				DataOutputStream os = new DataOutputStream(
+						process.getOutputStream());
+				os.writeBytes(command);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		Log.w(Controller.class.getName(), command);
 	}
 
 	public void updateAll(boolean state) {
@@ -60,27 +77,17 @@ public class Controller {
 		for (String name : names) {
 			updateScreenLock(name, state);
 		}
-
-		Log.w(Controller.class.getName(), "ScreenLock wurde fuer jeden auf "
-				+ state + " gesetzt");
 	}
 
 	public void toggle(String name) {
 		daoStatus.open();
 		Status status = daoStatus.getByName(name);
-		boolean state = true;
-		if (status.getStatus() == 1 ? true : false) {
-			status.setStatus(0);
-			state = false;
-		} else {
-			status.setStatus(1);
-			state = true;
-		}
-		daoStatus.updateStatus(status);
 		daoStatus.close();
-
-		Log.w(Controller.class.getName(), "ScreenLock wurde fuer " + name
-				+ " auf " + state + " geschalten.");
+		if (status.getStatus() == 1 ? true : false) {
+			updateScreenLock(name, false);
+		} else {
+			updateScreenLock(name, true);
+		}
 	}
 
 	public void toggleAll() {
